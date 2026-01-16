@@ -20,6 +20,7 @@ param(
 
     # Paths / Image
     [string]$ProjectPath,
+	[string]$Version,
     [string]$ImageName,
     [string]$Registry,
 
@@ -81,8 +82,10 @@ if ($SonarProjectKey) {
 # -----------------------------
 # Version resolution
 # -----------------------------
-$Version = . "$PSScriptRoot/shared/version.ps1" -AppPath $ProjectPath
-Write-Info "Resolved version: $Version"
+if (-not $Version) {
+    $Version = . "$PSScriptRoot/shared/version.ps1" -AppPath $ProjectPath
+}
+Write-Info "Using version: $Version"
 
 # -----------------------------
 # NuGet library flow
