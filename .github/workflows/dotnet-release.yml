@@ -36,7 +36,7 @@ jobs:
             -DotnetMode app `
             -Build $true `
             -Publish $false `
-            -ProjectPath 'SampleDotNet10App'
+            -ProjectPath 'SampleDotNet10App' `
             -Version $env:VERSION
 
       - name: Publish UAT artifact
@@ -47,7 +47,7 @@ jobs:
             -DotnetMode app `
             -Build $true `
             -Publish $true `
-            -ProjectPath 'SampleDotNet10App'
+            -ProjectPath 'SampleDotNet10App' `
             -Version $env:VERSION
 
       - name: Upload artifact for UAT
@@ -75,5 +75,5 @@ jobs:
             -DotnetMode app `
             -Build $false `
             -Publish $true `
-            -ProjectPath 'SampleDotNet10App'
+            -ProjectPath 'SampleDotNet10App' `
             -Version $env:VERSION
