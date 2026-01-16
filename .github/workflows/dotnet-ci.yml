@@ -43,7 +43,7 @@ jobs:
             -ProjectType dotnet `
             -DotnetMode app `
             -Build $true `
-            -Publish $false
+            -Publish $false `
             -ProjectPath './SampleDotNet10App/SampleDotNet10App.sln'
 
       # -----------------------------
@@ -57,7 +57,7 @@ jobs:
             -ProjectType dotnet `
             -DotnetMode app `
             -Build $true `
-            -Publish $true
+            -Publish $true `
             -ProjectPath './SampleDotNet10App/SampleDotNet10App.sln'
 
       # -----------------------------
