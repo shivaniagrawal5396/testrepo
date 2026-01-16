@@ -44,7 +44,7 @@ jobs:
             -DotnetMode app `
             -Build $true `
             -Publish $false `
-            -ProjectPath './SampleDotNet10App/SampleDotNet10App.sln'
+            -ProjectPath 'SampleDotNet10App'
 
       # -----------------------------
       # Publish Artifact (main only)
@@ -58,7 +58,7 @@ jobs:
             -DotnetMode app `
             -Build $true `
             -Publish $true `
-            -ProjectPath './SampleDotNet10App/SampleDotNet10App.sln'
+            -ProjectPath 'SampleDotNet10App'
 
       # -----------------------------
       # Upload Artifact
