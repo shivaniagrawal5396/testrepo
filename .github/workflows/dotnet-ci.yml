@@ -1,0 +1,69 @@
+name: DotNet CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # -----------------------------
+      # Checkout
+      # -----------------------------
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # -----------------------------
+      # Setup .NET 10 (Preview)
+      # -----------------------------
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # -----------------------------
+      # Build / Test (PR + Main)
+      # -----------------------------
+      - name: Build and Test
+        shell: pwsh
+        run: |
+          ./build.ps1 `
+            -ProjectType dotnet `
+            -DotnetMode app `
+            -Build $true `
+            -Publish $false
+
+      # -----------------------------
+      # Publish Artifact (main only)
+      # -----------------------------
+      - name: Publish deployable artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: pwsh
+        run: |
+          ./build.ps1 `
+            -ProjectType dotnet `
+            -DotnetMode app `
+            -Build $true `
+            -Publish $true
+
+      # -----------------------------
+      # Upload Artifact
+      # -----------------------------
+      - name: Upload artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployable-zip
+          path: artifacts/**
