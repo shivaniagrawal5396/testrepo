@@ -23,10 +23,13 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Set version from tag
+      - name: Set version from tag (strip leading v)
         id: vars
         run: |
-          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          # Remove leading 'v' if present
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION#v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
           
       - name: Build and Test
         shell: pwsh
