@@ -39,7 +39,7 @@ jobs:
       - name: Build and Test
         shell: pwsh
         run: |
-          ./build.ps1 `
+          ./scripts/build.ps1 `
             -ProjectType dotnet `
             -DotnetMode app `
             -Build $true `
@@ -52,7 +52,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: pwsh
         run: |
-          ./build.ps1 `
+          ./scripts/build.ps1 `
             -ProjectType dotnet `
             -DotnetMode app `
             -Build $true `
