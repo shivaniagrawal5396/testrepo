@@ -3,9 +3,6 @@ Purpose:
 Single entry point for PR, CI, and local builds.
 #>
 
-$ErrorActionPreference = "Stop"
-Set-StrictMode -Version Latest
-
 param(
     [ValidateSet("dotnet", "angular")]
     [string]$ProjectType = "dotnet",
@@ -29,6 +26,9 @@ param(
     [bool]$Build  = $false,
     [bool]$Publish = $false
 )
+
+$ErrorActionPreference = "Stop"
+Set-StrictMode -Version Latest
 
 . "$PSScriptRoot/shared/common.ps1"
 
