@@ -2,31 +2,54 @@ name: DotNet CI
 
 on:
   pull_request:
-    branches:
-      - main
-
+    branches: [ main ]
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 permissions:
   contents: read
 
 jobs:
-  build:
+# -------------------------------------------------
+# Detect changed projects
+# -------------------------------------------------
+  detect-changes:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.detect.outputs.matrix }}
 
     steps:
-      # -----------------------------
-      # Checkout
-      # -----------------------------
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      - name: Detect changed .NET projects
+        id: detect
+        shell: pwsh
+        run: |
+          ./scripts/changed-solutions.ps1
+
+# -------------------------------------------------
+# Build only changed projects
+# -------------------------------------------------
+  build:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.matrix != ''
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+
+    steps:
       # -----------------------------
-      # Setup .NET 10 (Preview)
+      # Checkout
+      # -----------------------------
+      - uses: actions/checkout@v4
+
+      # -----------------------------
+      # Setup .NET 10
       # -----------------------------
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -34,7 +57,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       # -----------------------------
-      # Build / Test (PR + Main)
+      # Build & Test
       # -----------------------------
       - name: Build and Test
         shell: pwsh
@@ -44,12 +67,12 @@ jobs:
             -DotnetMode app `
             -Build $true `
             -Publish $false `
-            -ProjectPath 'SampleDotNet10App'
+            -ProjectPath '${{ matrix.project }}'
 
       # -----------------------------
-      # Publish Artifact (main only)
+      # Publish (main only)
       # -----------------------------
-      - name: Publish deployable artifact
+      - name: Publish
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: pwsh
         run: |
@@ -58,7 +81,7 @@ jobs:
             -DotnetMode app `
             -Build $true `
             -Publish $true `
-            -ProjectPath 'SampleDotNet10App'
+            -ProjectPath '${{ matrix.project }}'
 
       # -----------------------------
       # Upload Artifact
@@ -67,5 +90,5 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
-          name: deployable-zip
-          path: artifacts/**
+          name: deployable-${{ matrix.project }}
+          path: artifacts/${{ matrix.project }}/**
