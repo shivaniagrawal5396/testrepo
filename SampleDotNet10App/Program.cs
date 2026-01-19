@@ -19,4 +19,6 @@ string result = number switch
 };
 //comment for test-1.0.1
 //comment for test-1.0.2
+//comment for test-1.0.3
+Console.WriteLine($"Number1: {number} → {result}");
 Console.WriteLine($"Number: {number} → {result}");
