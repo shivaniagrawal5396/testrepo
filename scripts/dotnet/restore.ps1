@@ -1,6 +1,6 @@
 <#
 Purpose:
-Restores NuGet dependencies for .NET projects.
+Restores .NET dependencies for the project.
 #>
 
 param(
@@ -8,15 +8,25 @@ param(
     [string]$ProjectPath
 )
 
-. "$PSScriptRoot/../shared/common.ps1"
+$ErrorActionPreference = "Stop"
 
-Write-Info "Restoring .NET dependencies in $ProjectPath"
-Push-Location $ProjectPath
+try {
+    Write-Host "Restoring .NET dependencies in $ProjectPath"
 
-dotnet restore
-if ($LASTEXITCODE -ne 0) {
-    Pop-Location
-    Write-ErrorAndExit "Restore failed"
+    Push-Location $ProjectPath
+
+    dotnet restore
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "dotnet restore failed for $ProjectPath"
+    }
+
+    Write-Host "Restore completed successfully"
 }
-
-Pop-Location
+catch {
+    Write-Error "Restore failed: $($_.Exception.Message)"
+    exit 1
+}
+finally {
+    Pop-Location -ErrorAction SilentlyContinue
+}

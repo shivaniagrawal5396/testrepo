@@ -9,15 +9,25 @@ param(
     [string]$ProjectPath
 )
 
-. "$PSScriptRoot/../shared/common.ps1"
+$ErrorActionPreference = "Stop"
 
-Write-Info "Building .NET project in $ProjectPath"
-Push-Location $ProjectPath
+try {
+    Write-Host "Building .NET project in $ProjectPath"
 
-dotnet build --configuration Release --no-restore
-if ($LASTEXITCODE -ne 0) {
-    Pop-Location
-    Write-ErrorAndExit "Build failed"
+    Push-Location $ProjectPath
+
+    dotnet build --configuration Release --no-restore
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "dotnet build failed for $ProjectPath"
+    }
+
+    Write-Host "Build succeeded"
 }
-
-Pop-Location
+catch {
+    Write-Error "Build failed: $($_.Exception.Message)"
+    exit 1
+}
+finally {
+    Pop-Location -ErrorAction SilentlyContinue
+}

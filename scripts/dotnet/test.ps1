@@ -1,7 +1,7 @@
 <#
 Purpose:
-Executes automated unit tests for .NET projects.
-Fails the pipeline if tests fail.
+Runs .NET tests in Release mode.
+Assumes build has already been completed.
 #>
 
 param(
@@ -9,15 +9,27 @@ param(
     [string]$ProjectPath
 )
 
-. "$PSScriptRoot/../shared/common.ps1"
+$ErrorActionPreference = "Stop"
 
-Write-Info "Running .NET tests in $ProjectPath"
-Push-Location $ProjectPath
+try {
+    Write-Host "Running .NET tests in $ProjectPath"
 
-dotnet test --configuration Release --no-build
-if ($LASTEXITCODE -ne 0) {
-    Pop-Location
-    Write-ErrorAndExit "Tests failed"
+    Push-Location $ProjectPath
+
+    dotnet test `
+        --configuration Release `
+        --no-build
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "dotnet test failed for $ProjectPath"
+    }
+
+    Write-Host "Tests passed successfully"
 }
-
-Pop-Location
+catch {
+    Write-Error "Tests failed: $($_.Exception.Message)"
+    exit 1
+}
+finally {
+    Pop-Location -ErrorAction SilentlyContinue
+}
