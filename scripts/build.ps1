@@ -90,16 +90,13 @@ Write-Info "Using version: $Version"
 # -----------------------------
 # NuGet library flow
 # -----------------------------
-if ($ProjectType -eq "dotnet" -and $DotnetMode -eq "library") {
+if ($ProjectType -eq "dotnet" -and $DotnetMode -eq "library" -and $Publish) {
 	
-    . "$PSScriptRoot/dotnet/pack.ps1" `
-    -ProjectPath $ProjectPath `
-    -Version $Version
-	
-    . "$PSScriptRoot/dotnet/publish-nuget.ps1" `
-    -ProjectPath $ProjectPath `
-    -GitHubOwner "your-github-org" `
-    -GitHubToken $env:GITHUB_TOKEN
+    . "$PSScriptRoot/dotnet/pack-and-publish.ps1" `
+            -ProjectPath $ProjectPath `
+            -Configuration Release `
+            -GitHubOwner "your-github-org" `
+            -GitHubToken $env:GITHUB_TOKEN
 	
     Write-Info "Library build completed successfully"
     return
