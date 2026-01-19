@@ -95,8 +95,8 @@ if ($ProjectType -eq "dotnet" -and $DotnetMode -eq "library" -and $Publish) {
     . "$PSScriptRoot/dotnet/pack-and-publish.ps1" `
             -ProjectPath $ProjectPath `
             -Configuration Release `
-            -GitHubOwner "your-github-org" `
-            -GitHubToken $env:GITHUB_TOKEN
+            -GitHubOwner "shivaniagrawal5396" `
+            -GitHubToken $env:NUGET_TOKEN
 	
     Write-Info "Library build completed successfully"
     return

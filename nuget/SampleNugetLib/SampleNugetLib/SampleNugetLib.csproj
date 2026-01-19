@@ -8,7 +8,7 @@
     <PackageId>SampleNugetLib</PackageId>
     <Authors>Shivani Agrawal</Authors>
     <Description>Sample NuGet package</Description>
-    <RepositoryUrl>https://github.com/<ORG>/<REPO></RepositoryUrl>
+    <RepositoryUrl>https://github.com/shivaniagrawal5396/testrepo</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

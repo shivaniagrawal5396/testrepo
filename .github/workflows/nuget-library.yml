@@ -52,7 +52,7 @@ jobs:
       - name: Build & Publish NuGet Library
         shell: pwsh
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN}}
         run: |
           Write-Host "Building library: $(${{ matrix.project }})"
 
