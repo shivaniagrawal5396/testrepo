@@ -78,6 +78,5 @@ $source = "https://nuget.pkg.github.com/$GitHubOwner/index.json"
 dotnet nuget push $package.FullName `
     --source $source `
     --api-key $GitHubToken `
-    --skip-duplicate
 
 Write-Host "NuGet package published successfully: $($package.Name)"
