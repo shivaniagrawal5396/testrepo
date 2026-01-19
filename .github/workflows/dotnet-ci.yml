@@ -28,7 +28,7 @@ jobs:
         id: detect
         shell: pwsh
         run: |
-          ./scripts/changed-solutions.ps1
+          ./scripts/shared/changed-solutions.ps1
 
 # -------------------------------------------------
 # Build only changed projects
