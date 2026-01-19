@@ -5,7 +5,7 @@
     <!-- Base version lives in csproj -->
     <Version>1.0.0</Version>
     <!-- NuGet metadata -->
-    <PackageId>SampleNugetLib</PackageId>
+    <PackageId>SampleNugetLib1</PackageId>
     <Authors>Shivani Agrawal</Authors>
     <Description>Sample NuGet package</Description>
     <RepositoryUrl>https://github.com/shivaniagrawal5396/testrepo</RepositoryUrl>
