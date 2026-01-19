@@ -32,7 +32,7 @@ catch {
     $Commit = "local"
 }
 
-$FinalVersion = "$Commit"
+$FinalVersion = "1.0.0+$Commit"
 
 Write-Info "Resolved image version for [$AppPath]: $FinalVersion"
 $FinalVersion
