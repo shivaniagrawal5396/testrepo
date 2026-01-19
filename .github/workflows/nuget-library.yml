@@ -30,11 +30,15 @@ jobs:
         id: detect
         shell: pwsh
         run: |
-          ./scripts/shared/changed-solutions.ps1
+          # This script should output a JSON array of changed projects
+          # Example: ["nuget/SampleNugetLib/SampleNugetLib"]
+          $changed = ./scripts/shared/changed-solutions.ps1
+          $json = $changed | ConvertTo-Json -Compress
+          Write-Output "::set-output name=matrix::$json"
 
   build-and-publish:
     needs: detect-changed-libraries
-    if: needs.detect-changed-libraries.outputs.matrix != ''
+    if: needs.detect-changed-libraries.outputs.matrix != '[]'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -52,25 +56,26 @@ jobs:
       - name: Build & Publish NuGet Library
         shell: pwsh
         env:
-          GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN}}
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
         run: |
-          Write-Host "Building library: $(${{ matrix.project }})"
+          $project = "${{ matrix.project }}"
+          Write-Host "Building library: $project"
 
           # Always build
           ./scripts/build.ps1 `
             -ProjectType dotnet `
             -DotnetMode library `
-            -ProjectPath '${{ matrix.project }}' `
+            -ProjectPath $project `
             -Build $true `
             -Publish $false
 
           # Only publish if pushing to main
           if ($env:GITHUB_EVENT_NAME -eq "push") {
-              Write-Host "Publishing NuGet package for $(${{ matrix.project }})"
+              Write-Host "Publishing NuGet package for $project"
               ./scripts/build.ps1 `
                 -ProjectType dotnet `
                 -DotnetMode library `
-                -ProjectPath '${{ matrix.project }}' `
+                -ProjectPath $project `
                 -Build $true `
                 -Publish $true
           } else {
